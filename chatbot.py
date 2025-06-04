@@ -9,6 +9,7 @@ from fastapi.security import OAuth2PasswordBearer
 import asyncio
 from langchain_chroma import Chroma
 from langchain_openai.embeddings import OpenAIEmbeddings
+import requests
 from check_topic import check_topic
 from model import generate_course_structure, process_response_stream
 from schema import ChatRequest, CourseRequest
