@@ -1,0 +1,74 @@
+# Byte-compiled / optimized / compiled Python files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+pip-wheel-metadata/
+*.egg-info/
+*.egg
+*.whl
+.eggs/
+
+# Caches
+*.pyc
+*.pyo
+*.pyd
+*.cache
+*.coverage
+*.coverage.*
+.cache/
+coverage.xml
+*.cover
+*.log
+*.log.*
+.hypothesis/
+.pytest_cache/
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints
+
+# Test results
+htmlcov/
+.tox/
+.nox/
+coverage/
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+
+# PyInstaller
+*.manifest
+*.spec
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre
+.pyre/
+
+# Profiling data
+.prof
+
+# Docker
+*.dockerfile
+*.env
+
+# Environment variables
+.env
+.env.*
+
+chroma_db/
+chroma_db.rar
