@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_chroma import Chroma
 
 # Cấu hình
-CHROMA_PATH = r"chroma_db"
+CHROMA_PATH = "./chroma_db"
 
 # Khởi tạo embeddings và mô hình
 embeddings_model = OpenAIEmbeddings(model="text-embedding-3-large")
@@ -12,6 +12,7 @@ llm = ChatOpenAI(temperature=0.5, model='gpt-4o-mini')
 
 # Kết nối với cơ sở dữ liệu Chroma
 vector_store = Chroma(
+    collection_name="example_collection",
     embedding_function=embeddings_model,
     persist_directory=CHROMA_PATH,
 )
