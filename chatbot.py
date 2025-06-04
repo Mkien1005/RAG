@@ -18,6 +18,7 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from jose import JWTError, jwt
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
+import rarfile
 # Load biến môi trường từ file .env
 load_dotenv()
 MONGO_URL = os.getenv("MONGODB_URI")
@@ -33,7 +34,7 @@ origins = os.getenv("ORIGINS").split(",")
 def download_chroma_from_drive():
     CHROMA_PATH = "chroma_db"
     GOOGLE_DRIVE_FILE_ID = "1syQQfIsD0lzrUhFDC5E_Gf7gC1Ubgllm"
-    CHROMA_ZIP = "chroma_db.zip"
+    CHROMA_ZIP = "chroma_db.rar"
     if os.path.exists(CHROMA_PATH):
         print("[INFO] ChromaDB đã tồn tại.")
         # xóa folder chroma_db
@@ -49,8 +50,8 @@ def download_chroma_from_drive():
 
     print("[INFO] Giải nén ChromaDB vào thư mục chroma_db/...")
     os.makedirs(CHROMA_PATH, exist_ok=True)
-    with zipfile.ZipFile(CHROMA_ZIP, 'r') as zip_ref:
-        zip_ref.extractall(CHROMA_PATH)
+    with rarfile.RarFile(CHROMA_ZIP, 'r') as rar_ref:
+        rar_ref.extractall(CHROMA_PATH)
 
     os.remove(CHROMA_ZIP)
     print("[INFO] Hoàn tất.")
