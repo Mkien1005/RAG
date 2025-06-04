@@ -1,6 +1,7 @@
 import datetime
 import os
 import zipfile
+import shutil
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException, Depends, Request, Response, status
 from fastapi.responses import StreamingResponse
@@ -35,7 +36,8 @@ def download_chroma_from_drive():
     CHROMA_ZIP = "chroma_db.zip"
     if os.path.exists(CHROMA_PATH):
         print("[INFO] ChromaDB đã tồn tại.")
-        return
+        # xóa folder chroma_db
+        shutil.rmtree(CHROMA_PATH)
 
     print("[INFO] Tải ChromaDB từ Google Drive...")
     url = f"https://drive.google.com/uc?export=download&id={GOOGLE_DRIVE_FILE_ID}"
