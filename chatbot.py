@@ -1,7 +1,5 @@
 import datetime
 import os
-import zipfile
-import shutil
 from bson import ObjectId
 from fastapi import FastAPI, HTTPException, Depends, Request, Response, status
 from fastapi.responses import StreamingResponse
@@ -10,7 +8,6 @@ from fastapi.security import OAuth2PasswordBearer
 import asyncio
 from langchain_chroma import Chroma
 from langchain_openai.embeddings import OpenAIEmbeddings
-import requests
 from check_topic import check_topic
 from model import generate_course_structure, process_response_stream
 from schema import ChatRequest, CourseRequest
@@ -18,7 +15,6 @@ from motor.motor_asyncio import AsyncIOMotorClient
 from jose import JWTError, jwt
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.encoders import jsonable_encoder
-import gdown
 # Load biến môi trường từ file .env
 load_dotenv()
 MONGO_URL = os.getenv("MONGODB_URI")
@@ -31,28 +27,6 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="token")
 app = FastAPI()
 # Cấu hình CORS
 origins = os.getenv("ORIGINS").split(",")
-def download_chroma_from_drive():
-    CHROMA_PATH = "chroma_db1"
-    GOOGLE_DRIVE_FILE_ID = "1VcLJ-KZhsQLbMTcDKFTQioj-dRU_6hP4"
-    CHROMA_ZIP = "chroma_db.zip"
-    if os.path.exists(CHROMA_PATH):
-        print("[INFO] ChromaDB đã tồn tại.")
-        # xóa folder chroma_db
-        shutil.rmtree(CHROMA_PATH)
-    print("[INFO] Tải ChromaDB từ Google Drive...")
-    url = f"https://drive.google.com/uc?export=download&id={GOOGLE_DRIVE_FILE_ID}"
-    # response = requests.get(url)
-    # print(response)
-    gdown.download(f"https://drive.google.com/uc?id={GOOGLE_DRIVE_FILE_ID}", output="chroma_db.zip", quiet=False)
-    # Giải nén file ZIP
-    print("[INFO] Đang giải nén...")
-    with zipfile.ZipFile(CHROMA_ZIP, 'r') as zip_ref:
-        zip_ref.extractall(CHROMA_PATH)
-    print("[INFO] Giải nén hoàn tất!")
-
-    # Xóa file zip nếu muốn
-    os.remove(CHROMA_ZIP)
-download_chroma_from_drive()
 # Khởi tạo vector store
 embeddings = OpenAIEmbeddings(model="text-embedding-3-large")
 vector_store = Chroma(

@@ -4,7 +4,7 @@ from langchain_openai import ChatOpenAI, OpenAIEmbeddings
 from langchain_chroma import Chroma
 
 # Cấu hình
-CHROMA_PATH = r"chroma_db1/chroma_db"
+CHROMA_PATH = r"chroma_db"
 
 # Khởi tạo embeddings và mô hình
 embeddings_model = OpenAIEmbeddings(model="text-embedding-3-large")
