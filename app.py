@@ -11,10 +11,9 @@ from auth import get_current_user
 # Khởi tạo FastAPI
 app = FastAPI()
 
-# Định nghĩa input model
 class QueryInput(BaseModel):
     question: str
-    sessionId: str
+    sessionId: str | None = None
 
 @app.get("/api/chat/sessions")
 async def getSessions(user: dict = Depends(get_current_user)):

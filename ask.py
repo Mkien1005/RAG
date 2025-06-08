@@ -8,12 +8,16 @@ from create_prompt import create_prompt
 from motor.motor_asyncio import AsyncIOMotorClient
 import os
 from dotenv import load_dotenv
+from pymongo.server_api import ServerApi
+
 load_dotenv()
-MONGO_URL = os.getenv("MONGODB_URI")
+
+MONGO_URL = os.getenv("MONGODB_URL")
 client = AsyncIOMotorClient(MONGO_URL)
 db = client.get_database("test")
 sessions_collection = db.get_collection("sessions")
 messages_collection = db.get_collection("messages")
+
 # Khởi tạo embeddings và mô hình
 embeddings_model = OpenAIEmbeddings(model="text-embedding-3-large")
 llm = ChatOpenAI(temperature=0.5, model='gpt-4o-mini', streaming=True)
@@ -34,7 +38,8 @@ def retrieve_from_chromadb(question: str, top_k: int = 3):
     return results
 
 async def get_sessions(user):
-    sessions = await sessions_collection.find({"user_id": user["sub"]}).sort("created_at", -1).to_list(None)
+    cursor = sessions_collection.find({"user_id": user["sub"]}).sort("created_at", -1)
+    sessions = await cursor.to_list(length=None)
     for session in sessions:
         session["_id"] = str(session["_id"])
         session["messages"] = [str(message_id) for message_id in session["messages"]]
@@ -48,6 +53,7 @@ async def get_messages_by_session_id(session_id, user):
         message["_id"] = str(message["_id"])
         message["session_id"] = str(message["session_id"])
     return messages
+
 async def ask(request, user):
     question = request.question
     # history = request.history
