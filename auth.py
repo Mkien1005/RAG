@@ -1,6 +1,6 @@
 import base64
 import json
-from fastapi import HTTPException, Header, Request, status
+from fastapi import HTTPException, Request
 import os
 
 JWT_PUBLIC_KEY = os.getenv("JWT_PUBLIC_KEY").replace("\\n", "\n")
