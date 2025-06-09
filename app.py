@@ -12,7 +12,7 @@ from auth import get_current_user
 app = FastAPI()
 
 class QueryInput(BaseModel):
-    question: str
+    message: str
     sessionId: str | None = None
 
 @app.get("/api/chat/sessions")

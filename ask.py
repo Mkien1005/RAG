@@ -46,7 +46,10 @@ async def get_sessions(user):
     return sessions
 
 async def get_messages_by_session_id(session_id, user):
-    messages = await messages_collection.find({"session_id": ObjectId(session_id), "user_id": user["sub"]}).to_list(None)
+    session = await sessions_collection.find_one({"_id": ObjectId(session_id), "user_id": user["sub"]})
+    if not session:
+        raise HTTPException(status_code=404, detail="Không tìm thấy phiên hội thoại")
+    messages = await messages_collection.find({"session_id": ObjectId(session_id)}).to_list(None)
     if not messages:
         raise HTTPException(status_code=404, detail="Không tìm thấy tin nhắn hoặc không có quyền truy cập")
     for message in messages:
@@ -55,7 +58,7 @@ async def get_messages_by_session_id(session_id, user):
     return messages
 
 async def ask(request, user):
-    question = request.question
+    question = request.message
     # history = request.history
     session_id = request.sessionId
     if session_id:
