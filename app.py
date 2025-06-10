@@ -1,7 +1,7 @@
 import json
 import os
 from fastapi import Depends, FastAPI
-from fastapi.responses import PlainTextResponse
+from fastapi.responses import PlainTextResponse, StreamingResponse
 from pydantic import BaseModel
 import asyncio
 from dotenv import load_dotenv
@@ -31,10 +31,11 @@ async def get_messages(session_id: str, user: dict = Depends(get_current_user)):
 @app.post("/api/chat/message")
 async def query_endpoint(request: QueryInput, user: dict = Depends(get_current_user)):
     # Bước 1: Kiểm tra small talk
-    if re.search(r'\b(xin chào|hello|hi|cảm ơn|bye)\b', request.message.lower()):
-        return PlainTextResponse("Xin chào, tôi là trợ lý lập trình. Tôi có thể giúp gì cho bạn?")
+    if re.search(r'\b(xin chào|hello|hi|chào|chao|chào bạn|chao ban|chào bạn|chao ban)\b', request.message.lower()):
+        # stream response
+        return StreamingResponse("Xin chào, tôi là trợ lý lập trình. Tôi có thể giúp gì cho bạn?", media_type="text/plain")
     if not await is_programming_question(request.message):
-        return PlainTextResponse("Câu hỏi không liên quan đến lập trình C, vui lòng hỏi về lập trình.")
+        return StreamingResponse("Vui lòng hỏi câu hỏi liên quan đến lập trình.", media_type="text/plain")
     
     # Bước 3: Truy xuất từ ChromaDB
     return await ask(request, user)
