@@ -119,5 +119,6 @@ async def ask(request, user):
             )
         except Exception as e:
             yield f"Lỗi khi tạo phản hồi: {str(e)}"
-    
-    return StreamingResponse(stream_llm_response(), media_type="text/plain")
+    response = StreamingResponse(stream_llm_response(), media_type="text/plain")
+    response.headers["X-Session-Id"] = str(session["_id"])
+    return response
