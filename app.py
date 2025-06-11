@@ -8,11 +8,21 @@ from dotenv import load_dotenv
 from ask import ask, get_sessions, get_messages_by_session_id
 from check_talk import is_programming_question, is_small_talk
 import re
+from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 from auth import get_current_user
 # Khởi tạo FastAPI
 app = FastAPI()
 
+origins = os.getenv("ORIGINS").split(",")
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,     # Các nguồn được phép truy cập
+    allow_credentials=True,    # Cho phép chia sẻ thông tin xác thực (cookie, header)
+    allow_methods=["*"],       # Cho phép tất cả các phương thức HTTP (GET, POST, PUT, DELETE...)
+    allow_headers=["*"],       # Cho phép tất cả các headers
+    expose_headers=["x-session-id"]
+)
 class QueryInput(BaseModel):
     message: str
     sessionId: str | None = None
