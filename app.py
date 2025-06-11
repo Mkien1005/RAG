@@ -1,7 +1,7 @@
 import json
 import os
 from fastapi import Depends, FastAPI
-from fastapi.responses import PlainTextResponse, StreamingResponse
+from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import asyncio
 from dotenv import load_dotenv
@@ -15,6 +15,7 @@ from auth import get_current_user
 app = FastAPI()
 
 origins = os.getenv("ORIGINS").split(",")
+print(origins)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,     # Các nguồn được phép truy cập
