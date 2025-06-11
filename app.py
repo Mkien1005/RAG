@@ -40,9 +40,9 @@ async def query_endpoint(request: QueryInput, user: dict = Depends(get_current_u
     # Bước 3: Truy xuất từ ChromaDB
     return await ask(request, user)
 
-@app.get("/")
-async def root():
-    return {"message": "Hello World"}
+@app.head("/api/health")
+async def health():
+    return {"message": "OK"}
 
 if __name__ == "__main__":
     import uvicorn
