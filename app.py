@@ -39,6 +39,11 @@ async def query_endpoint(request: QueryInput, user: dict = Depends(get_current_u
     
     # Bước 3: Truy xuất từ ChromaDB
     return await ask(request, user)
+
+@app.get("/")
+async def root():
+    return {"message": "Hello World"}
+
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))  # Mặc định cổng 8000 cho FastAPI

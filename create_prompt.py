@@ -12,6 +12,7 @@ bloom_instructions = {
 
 def create_prompt(question: str, retrieved_docs: list, bloomLevel: str):
     context = "\n".join([doc.page_content for doc in retrieved_docs])
+    print(context)
     instruction = bloom_instructions.get(bloomLevel.lower(), bloom_instructions["understand"])
 
     prompt_template = PromptTemplate(
@@ -28,6 +29,7 @@ def create_prompt(question: str, retrieved_docs: list, bloomLevel: str):
 
         Trả lời bằng tiếng Việt, dễ hiểu và phù hợp với sinh viên mới học lập trình.
         Nếu trong tài liệu không có câu trả lời, hãy trả lời "Không tìm thấy thông tin phù hợp"
+        Nếu tài liệu không đề cập không phù hợp, bạn có thể tự đưa ra ví dụ khác phù hợp.
         """
     )
 

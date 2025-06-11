@@ -33,8 +33,9 @@ vector_store = Chroma(
 # Hàm truy xuất từ ChromaDB
 def retrieve_from_chromadb(question: str, top_k: int = 3):
     # Truy vấn ChromaDB
-    retrieved_docs = vector_store.as_retriever(search_type="mmr", search_kwargs={"k": top_k})
-    results = retrieved_docs.get_relevant_documents(question)
+    retrieved_docs = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": top_k})
+    print("retrieved_docs", retrieved_docs)
+    results = retrieved_docs.invoke(question)
     return results
 
 async def get_sessions(user):
@@ -62,9 +63,7 @@ async def ask(request, user):
     # history = request.history
     session_id = request.sessionId
     if session_id:
-        print(session_id)
         session = await sessions_collection.find_one({"_id": ObjectId(session_id)})
-        print(session)
         if not session:
             raise HTTPException(status_code=404, detail="Không tìm thấy phiên hội thoại")
     else:
