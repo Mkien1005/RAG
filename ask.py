@@ -34,7 +34,6 @@ vector_store = Chroma(
 def retrieve_from_chromadb(question: str, top_k: int = 3):
     # Truy vấn ChromaDB
     retrieved_docs = vector_store.as_retriever(search_type="similarity", search_kwargs={"k": top_k})
-    print("retrieved_docs", retrieved_docs)
     results = retrieved_docs.invoke(question)
     return results
 

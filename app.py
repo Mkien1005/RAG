@@ -15,7 +15,6 @@ from auth import get_current_user
 app = FastAPI()
 
 origins = os.getenv("ORIGINS").split(",")
-print(origins)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=origins,     # Các nguồn được phép truy cập
