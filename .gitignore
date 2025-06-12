@@ -69,5 +69,5 @@ dmypy.json
 # Environment variables
 .env
 .env.*
-chroma_db1/
+chroma_db/
 chroma_db.rar
