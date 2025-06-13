@@ -1,6 +1,6 @@
 import json
 import os
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.responses import StreamingResponse
 from pydantic import BaseModel
 import asyncio
@@ -11,6 +11,7 @@ import re
 from fastapi.middleware.cors import CORSMiddleware
 load_dotenv()
 from auth import get_current_user
+from sessions import get_user_sessions
 # Khởi tạo FastAPI
 app = FastAPI()
 
@@ -53,6 +54,11 @@ async def query_endpoint(request: QueryInput, user: dict = Depends(get_current_u
 @app.head("/")
 async def health():
     return {"message": "OK"}
+
+
+@app.get("/api/chat/sessions/{user_id}")
+async def get_user_chat_sessions(user_id: str, user: dict = Depends(get_current_user)):
+    return await get_user_sessions(user_id, user)
 
 if __name__ == "__main__":
     import uvicorn
