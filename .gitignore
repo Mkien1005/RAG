@@ -71,3 +71,5 @@ dmypy.json
 .env.*
 chroma_db/
 chroma_db.rar
+chroma_db/chroma.sqlite3
+chroma_db/0d8aecff-16f9-48c7-b203-48331e56f7d0/length.bin
