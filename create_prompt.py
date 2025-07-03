@@ -11,6 +11,7 @@ bloom_instructions = {
 }
 
 def create_prompt(question: str, retrieved_docs: list, bloomLevel: str):
+    print(bloomLevel)
     context = "\n".join([doc.page_content for doc in retrieved_docs])
     instruction = bloom_instructions.get(bloomLevel.lower(), bloom_instructions["understanding"])
     prompt_template = PromptTemplate(
