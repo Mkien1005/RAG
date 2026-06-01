@@ -41,16 +41,18 @@ async def get_messages(session_id: str, user: dict = Depends(get_current_user)):
 # Endpoint FastAPI
 @app.post("/api/chat/message")
 async def query_endpoint(request: QueryInput, user: dict = Depends(get_current_user)):
-    # Bước 1: Kiểm tra small talk
-    if re.search(r'\b(xin chào|hello|hi|chào|chao|chào bạn|chao ban|chào bạn|chao ban)\b', request.message.lower()):
-        # stream response
-        return StreamingResponse("Xin chào, tôi là trợ lý lập trình. Tôi có thể giúp gì cho bạn?", media_type="text/plain")
-    if not await is_programming_question(request.message):
-        return StreamingResponse("Vui lòng hỏi câu hỏi liên quan đến lập trình.", media_type="text/plain")
+    try:
+        # Bước 1: Kiểm tra small talk
+        if re.search(r'\b(xin chào|hello|hi|chào|chao|chào bạn|chao ban|chào bạn|chao ban)\b', request.message.lower()):
+            # stream response
+            return StreamingResponse("Xin chào, tôi là trợ lý lập trình. Tôi có thể giúp gì cho bạn?", media_type="text/plain")
+        if not await is_programming_question(request.message):
+            return StreamingResponse("Vui lòng hỏi câu hỏi liên quan đến lập trình.", media_type="text/plain")
     
-    # Bước 3: Truy xuất từ ChromaDB
-    return await ask(request, user)
-
+        # Bước 3: Truy xuất từ ChromaDB
+        return await ask(request, user)
+    except Exception as e:
+        return StreamingResponse("Something went wrong. Please contact with the administrator and try again.", media_type="text/plain")
 @app.head("/")
 async def health():
     return {"message": "OK"}
