@@ -1,6 +1,6 @@
 import re
 from langchain_openai import ChatOpenAI
-from langchain.schema import HumanMessage
+from langchain_core.messages import HumanMessage
 from dotenv import load_dotenv
 load_dotenv()
 # Hàm kiểm tra small talk
