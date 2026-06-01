@@ -106,29 +106,33 @@ async def chat(request: ChatRequest, user: dict = Depends(get_current_user)):
 
         # Tạo generator stream + lưu dữ liệu sau khi kết thúc
         async def event_stream():
-            chunks = []
-            async for chunk in process_response_stream(user["gpa"], message, history):
-                chunks.append(chunk)
-                yield chunk
+            try:
+                chunks = []
+                async for chunk in process_response_stream(user["gpa"], message, history):
+                    chunks.append(chunk)
+                    yield chunk
 
-            # Sau khi stream kết thúc: lưu phản hồi vào MongoDB
-            rag_message = {
-                "session_id": session["_id"],
-                "content": ''.join(chunks),
-                "sender": "rag",
-                "timestamp": datetime.datetime.now(),
-            }
-            rag_message_result = await messages_collection.insert_one(rag_message)
+                # Sau khi stream kết thúc: lưu phản hồi vào MongoDB
+                rag_message = {
+                    "session_id": session["_id"],
+                    "content": ''.join(chunks),
+                    "sender": "rag",
+                    "timestamp": datetime.datetime.now(),
+                }
+                rag_message_result = await messages_collection.insert_one(rag_message)
 
-            # Cập nhật session
-            await sessions_collection.update_one(
-                {"_id": session["_id"]},
-                {"$push": {
-                    "messages": {
-                        "$each": [user_message_result.inserted_id, rag_message_result.inserted_id]
-                    }
-                }}
-            )
+                # Cập nhật session
+                await sessions_collection.update_one(
+                    {"_id": session["_id"]},
+                    {"$push": {
+                        "messages": {
+                            "$each": [user_message_result.inserted_id, rag_message_result.inserted_id]
+                        }
+                    }}
+                )
+            except Exception as e:
+                print(f"Error in event_stream: {str(e)}")
+                yield "OpenAI quota exceeded. Please contact to admin to request for more quota."
         response = StreamingResponse(event_stream(), media_type="text/plain")
         response.headers["X-Session-Id"] = str(session["_id"])
         return response
