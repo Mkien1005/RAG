@@ -56,6 +56,8 @@ async def query_endpoint(request: QueryInput, user: dict = Depends(get_current_u
 
 @app.head("/")
 async def health():
+    # Get sessions list to check if database connection is working
+    await get_sessions({"id": "test_user"})
     return {"message": "OK"}
 
 
