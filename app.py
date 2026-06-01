@@ -53,6 +53,7 @@ async def query_endpoint(request: QueryInput, user: dict = Depends(get_current_u
         return await ask(request, user)
     except Exception as e:
         return StreamingResponse("Something went wrong. Please contact with the administrator and try again.", media_type="text/plain")
+
 @app.head("/")
 async def health():
     return {"message": "OK"}
@@ -65,6 +66,6 @@ async def get_user_chat_sessions(user_id: str, user: dict = Depends(get_current_
 if __name__ == "__main__":
     import uvicorn
     port = int(os.getenv("PORT", 8000))  # Mặc định cổng 8000 cho FastAPI
-    uvicorn.run(app, host=os.getenv("HOST", "localhost"), port=port)
+    uvicorn.run(app, host=os.getenv("HOST", "0.0.0.0"), port=port)
 
 # Chạy ứng dụng: uvicorn app:app --reload
